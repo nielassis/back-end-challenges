@@ -29,10 +29,10 @@ A **Goomer Lista Rango** é uma API que permite a gestão de restaurantes e prod
 
 ## 💻 Tecnologias
 
-- **Node.js** ![Node.js](https://skillicons.dev/icons/nodejs.svg) - Backend com JavaScript.
-- **Express** ![Express](https://skillicons.dev/icons/express.svg) - Framework web minimalista.
-- **PostgreSQL** ![PostgreSQL](https://skillicons.dev/icons/postgresql.svg) - Banco de dados relacional.
-- **Sequelize** ![Sequelize](https://skillicons.dev/icons/sequelize.svg) - ORM para facilitar a interação com o banco de dados.
+- <img src="https://skillicons.dev/icons?i=nodejs" width="32" /> - Backend com JavaScript.
+- <img src="https://skillicons.dev/icons?i=express" width="32" /> - Framework web minimalista.
+- <img src="https://skillicons.dev/icons?i=postgres" width="32" /> - Banco de dados relacional.
+- <img src="https://skillicons.dev/icons?i=sequelize" width="32" /> - ORM para facilitar a interação com o banco de dados.
 
 ---
 
@@ -120,7 +120,7 @@ Linux e Mac
 
 ```bash
 cd src
-$env:DATABASE_URL="sua_string_de_conexao"
+export DATABASE_URL="sua_string_de_conexao"
 
 ```
 

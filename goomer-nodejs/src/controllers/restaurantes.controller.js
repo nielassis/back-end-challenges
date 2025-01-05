@@ -19,9 +19,11 @@ const findAll = async (req, res) => {
       attributes: ["id", "nome"],
     });
 
-    // const result = await client.query("SELECT id, nome FROM restaurantes");
-    // console.log(`Restaurantes encontrados: ${result.rows}`);
-    // res.status(200).json(result.rows);
+    /* 
+    const result = await client.query("SELECT id, nome FROM restaurantes");
+    console.log(`Restaurantes encontrados: ${result.rows}`);
+    res.status(200).json(result.rows);
+    */
 
     console.log("Restaurantes encontrados:", restaurantes);
     res.status(200).json(restaurantes);
@@ -37,9 +39,11 @@ const findAllData = async (req, res) => {
   try {
     const restaurantes = await db.Restaurante.findAll();
 
-    // const result = await client.query("SELECT * FROM restaurantes");
-    // console.log(`Informações de ${result.rows.count} Restaurantes encontrados: ${result.rows}`);
-    // res.status(200).json(result.rows);
+    /* 
+    const result = await client.query("SELECT * FROM restaurantes");
+    console.log(`Informações de ${result.rows.count} Restaurantes encontrados: ${result.rows}`);
+    res.status(200).json(result.rows);
+    */
 
     console.log("Restaurantes encontrados:", restaurantes);
     res.status(200).json(restaurantes);
@@ -66,15 +70,12 @@ const createNew = async (req, res) => {
         })),
       });
     }
-
-    /*
+    /* 
     const query = `
       INSERT INTO Restaurantes (foto, nome, horarioSemana, horarioFimSemana, endereco)
       VALUES ($1, $2, $3, $4, $5) RETURNING *;
     `;
-
     const values = [foto, nome, horarioSemana, horarioFimSemana, endereco];
-
     const result = await client.query(query, values);
     */
 
@@ -138,8 +139,7 @@ const update = async (req, res) => {
       message: "Restaurante atualizado com sucesso!",
       restaurante,
     });
-
-    /*
+    /* 
     const query = `UPDATE restaurantes 
                    SET foto = COALESCE($1, foto), 
                        nome = COALESCE($2, nome), 
@@ -177,14 +177,14 @@ const destroy = async (req, res) => {
     const query = `DELETE FROM restaurantes 
                   WHERE id = $1
                   RETURNING *`;
-
     const result = await client.query(query, [req.params.id]); 
     */
+
     const deletedCount = await db.Restaurante.destroy({
       where: { id: req.params.id },
     });
     res.status(200).json({
-      message: "Restaurante excluido com sucesso",
+      message: "Restaurante excluído com sucesso",
       deletedCount,
     });
   } catch (error) {

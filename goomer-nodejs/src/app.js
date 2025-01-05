@@ -55,6 +55,25 @@ const swaggerOptions = {
               type: "string",
               format: "uuid",
             },
+            promocao: {
+              type: "object",
+              properties: {
+                tipo: {
+                  type: "string",
+                },
+                valor: {
+                  type: "number",
+                },
+                dataInicio: {
+                  type: "string",
+                  format: "date",
+                },
+                dataFim: {
+                  type: "string",
+                  format: "date",
+                },
+              },
+            },
           },
         },
         Restaurantes: {

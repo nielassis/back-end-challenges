@@ -111,11 +111,11 @@ const swaggerOptions = {
                 properties: {
                   inicio: {
                     type: "string",
-                    format: "time", // ou outro formato que defina a hora
+                    format: "time",
                   },
                   fim: {
                     type: "string",
-                    format: "time", // ou outro formato que defina a hora
+                    format: "time",
                   },
                 },
                 required: ["inicio", "fim"],

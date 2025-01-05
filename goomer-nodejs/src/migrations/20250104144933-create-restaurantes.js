@@ -18,8 +18,12 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      horarioFuncionamento: {
-        type: Sequelize.TIME,
+      horarioSemana: {
+        type: Sequelize.JSON,
+        allowNull: false,
+      },
+      horarioFimSemana: {
+        type: Sequelize.JSON,
         allowNull: false,
       },
       endereco: {

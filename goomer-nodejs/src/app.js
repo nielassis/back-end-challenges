@@ -70,8 +70,37 @@ const swaggerOptions = {
             nome: {
               type: "string",
             },
-            horarioFuncionamento: {
-              type: "string",
+            horarioSemana: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  inicio: {
+                    type: "string",
+                  },
+                  fim: {
+                    type: "string",
+                  },
+                },
+                required: ["inicio", "fim"],
+              },
+            },
+            horarioFimSemana: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  inicio: {
+                    type: "string",
+                    format: "time", // ou outro formato que defina a hora
+                  },
+                  fim: {
+                    type: "string",
+                    format: "time", // ou outro formato que defina a hora
+                  },
+                },
+                required: ["inicio", "fim"],
+              },
             },
             endereco: {
               type: "string",

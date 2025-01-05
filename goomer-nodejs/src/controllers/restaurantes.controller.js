@@ -1,4 +1,8 @@
 const db = require("../models");
+const {
+  createRestaurantesSchema,
+  updateRestauranteSchema,
+} = require("../schemas/restaurantes.schema");
 
 /* const { Client } = require("pg");
 require("dotenv").config();
@@ -49,72 +53,119 @@ const findAllData = async (req, res) => {
 
 const createNew = async (req, res) => {
   try {
-    const { foto, nome, horarioFuncionamento, endereco } = req.body;
+    const { foto, nome, horarioSemana, horarioFimSemana, endereco } = req.body;
 
-    if (!foto || !nome || !horarioFuncionamento || !endereco) {
+    const parsed = createRestaurantesSchema.safeParse(req.body);
+
+    if (!parsed.success) {
       return res.status(400).json({
-        message: "Todos os campos são obrigatórios",
+        message: "Erro na validação dos dados",
+        errors: parsed.error.errors.map((err) => ({
+          path: err.path,
+          message: err.message,
+        })),
       });
     }
 
-    /* 
-    const query = `INSERT INTO restaurantes (foto, nome, horarioFuncionamento, endereco) 
-                  VALUES ( $1, $2, $3, $4) 
-                  RETURNING *`;
+    /*
+    const query = `
+      INSERT INTO Restaurantes (foto, nome, horarioSemana, horarioFimSemana, endereco)
+      VALUES ($1, $2, $3, $4, $5) RETURNING *;
+    `;
+
+    const values = [foto, nome, horarioSemana, horarioFimSemana, endereco];
 
     const result = await client.query(query, values);
     */
 
-    const novoRestaurante = await db.Restaurante.create({
+    const restaurante = await db.Restaurante.create({
       foto,
       nome,
-      horarioFuncionamento,
+      horarioSemana,
+      horarioFimSemana,
       endereco,
     });
-
     res.status(201).json({
       message: "Restaurante criado com sucesso",
-      restaurante: novoRestaurante,
+      restaurante,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       message: "Erro ao cadastrar Restaurante",
-      error,
+      error: error.message,
     });
   }
 };
 
 const update = async (req, res) => {
   try {
-    /* 
-        
-    const query = `UPDATE restaurantes
-                  SET foto = $1, nome = $2, horarioFuncionamento = $3, endereco = $4
-                  WHERE id = $5
-                  RETURNING *
-    `;
+    const { id } = req.params;
+    const { foto, nome, endereco, horarioSemana, horarioFimSemana } = req.body;
 
-    const result = await client.query(query, values);
-      */
-
-    const [affectedCount] = await db.Restaurante.update(req.body, {
-      where: { id: req.params.id },
+    const parsed = updateRestauranteSchema.safeParse({
+      foto,
+      nome,
+      endereco,
+      horarioSemana,
+      horarioFimSemana,
     });
 
-    if (affectedCount > 0) {
-      const newRestaurante = await db.Restaurante.findOne({
-        where: { id: req.params.id },
+    if (!parsed.success) {
+      return res.status(400).json({
+        message: "Erro na validação dos dados.",
+        errors: parsed.error.errors,
       });
-
-      return res.json(newRestaurante);
-    } else {
-      throw new Error("Restaurante não encontrado ou não foi atualizado");
     }
+
+    const restaurante = await db.Restaurante.findByPk(id);
+
+    if (!restaurante) {
+      return res.status(404).json({
+        message: "Restaurante não encontrado.",
+      });
+    }
+
+    await restaurante.update({
+      foto: foto || restaurante.foto,
+      nome: nome || restaurante.nome,
+      endereco: endereco || restaurante.endereco,
+      horarioSemana: horarioSemana || restaurante.horarioSemana,
+      horarioFimSemana: horarioFimSemana || restaurante.horarioFimSemana,
+    });
+
+    res.status(200).json({
+      message: "Restaurante atualizado com sucesso!",
+      restaurante,
+    });
+
+    /*
+    const query = `UPDATE restaurantes 
+                   SET foto = COALESCE($1, foto), 
+                       nome = COALESCE($2, nome), 
+                       endereco = COALESCE($3, endereco), 
+                       horarioSemana = COALESCE($4, horarioSemana), 
+                       horarioFimSemana = COALESCE($5, horarioFimSemana)
+                   WHERE id = $6
+                   RETURNING *`;
+
+    const result = await client.query(query, [foto, nome, endereco, horarioSemana, horarioFimSemana, id]);
+
+    if (result.rows.length > 0) {
+      res.status(200).json({
+        message: "Restaurante atualizado com sucesso!",
+        restaurante: result.rows[0],
+      });
+    } else {
+      res.status(404).json({
+        message: "Restaurante não encontrado.",
+      });
+    }
+    */
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({
-      message: "Erro ao atualizar Restaurante",
+      message: "Erro ao atualizar restaurante.",
       error: error.message,
     });
   }

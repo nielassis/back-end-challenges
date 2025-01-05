@@ -25,20 +25,14 @@ A **Goomer Lista Rango** é uma API que permite a gestão de restaurantes e prod
 - **Listar** produtos de um restaurante.
 - **Criar**, **Alterar** e **Excluir** produtos.
 
-#### **Promoções** 🎉
-
-- **Criar** promoções para produtos.
-- **Alterar** promoções existentes.
-- **Listar** promoções ativas.
-
 ---
 
 ## 💻 Tecnologias
 
-- **Node.js** - Backend com JavaScript.
-- **Express** - Framework web minimalista.
-- **PostgreSQL / MySQL** - Banco de dados relacional.
-- **Sequelize** (ou raw SQL) - ORM para facilitar a interação com o banco de dados.
+- **Node.js** ![Node.js](https://skillicons.dev/icons/nodejs.svg) - Backend com JavaScript.
+- **Express** ![Express](https://skillicons.dev/icons/express.svg) - Framework web minimalista.
+- **PostgreSQL** ![PostgreSQL](https://skillicons.dev/icons/postgresql.svg) - Banco de dados relacional.
+- **Sequelize** ![Sequelize](https://skillicons.dev/icons/sequelize.svg) - ORM para facilitar a interação com o banco de dados.
 
 ---
 
@@ -49,7 +43,7 @@ A **Goomer Lista Rango** é uma API que permite a gestão de restaurantes e prod
 Antes de rodar o projeto, garanta que você tenha o seguinte:
 
 - **Node.js** (>= 16.x)
-- **Banco de Dados** (PostgreSQL ou MySQL) configurado na sua máquina.
+- **Banco de Dados** (PostgreSQL) configurado na sua máquina.
 - **Postman** ou **Insomnia** para testar a API (opcional, mas recomendado).
 
 ## Passos para Configuração
@@ -110,6 +104,26 @@ Certifique-se de que sequelize-cli esteja instalado.
 npm install sequelize-cli
 ```
 
+### ⚠️ ATENÇÃO: em caso de erros rode os comandos de banco de dados dentro da pasta "src"
+
+Certifique-se de que a variavél de ambiente está acessivel para sequelizeORM
+
+Windows
+
+```bash
+cd src
+$env:DATABASE_URL="sua_string_de_conexao"
+
+```
+
+Linux e Mac
+
+```bash
+cd src
+$env:DATABASE_URL="sua_string_de_conexao"
+
+```
+
 rode as migrações.
 
 ```bash
@@ -136,8 +150,8 @@ A documentação da API estará disponível em [http://localhost:3000/api-docs](
 Durante o desenvolvimento, enfrentei alguns desafios técnicos que foram superados com criatividade e boas práticas:
 
 - **Validação de Horários:** Um dos maiores desafios foi validar os horários de funcionamento dos restaurantes e promoções, garantindo que os intervalos entre horários tivessem, no mínimo, 15 minutos de diferença.
+- **Validação do objeto "promocao" em Produtos:** A validação do objeto promocional dentro dos produtos foi um desafio significativo devido à complexidade do formato aninhado. O objeto de promoção está presente em vários níveis dentro de outros objetos, e garantir que todos os dados fossem validados corretamente, incluindo os dias da promoção e os horários de início e fim, exigiu uma abordagem meticulosa e o uso de bibliotecas como o Zod para validação de estruturas de dados complexas.
 - **Relacionamento entre Dados:** Como restaurantes podem ter muitos produtos e promoções associadas, a criação de uma estrutura de banco de dados eficiente e escalável foi um grande desafio. Utilizei relacionamentos entre as tabelas para manter os dados organizados.
-
 - **Boas Práticas de Código:** Procurando sempre seguir os princípios de **SOLID**, **KISS** e **DRY**, busquei manter o código o mais simples e reutilizável possível.
 
 ---

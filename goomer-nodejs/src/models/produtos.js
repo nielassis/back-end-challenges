@@ -26,6 +26,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
+      foto: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      categoria: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      promocao: {
+        type: DataTypes.JSONB, // Usando JSONB para armazenar os dados de promoção
+        allowNull: true,
+      },
     },
     {
       tableName: "produtos",

@@ -1,6 +1,5 @@
 "use strict";
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("produtos", {
@@ -24,9 +23,21 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      foto: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      categoria: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       preco: {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
+      },
+      promocao: {
+        type: Sequelize.JSONB,
+        allowNull: true,
       },
       createdAt: {
         type: Sequelize.DATE,

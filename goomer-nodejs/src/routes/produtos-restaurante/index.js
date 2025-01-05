@@ -19,14 +19,15 @@ const validate = (schema) => (req, res, next) => {
  * @swagger
  * tags:
  *   name: Produtos
- *   description: gerenciamento de produtos
+ *   description: Gerenciamento de produtos, incluindo cadastro, atualização, consulta e exclusão.
  */
 
 /**
  * @swagger
  * /produtos:
  *   post:
- *     summary: cadastra um produto
+ *     summary: Cadastra um novo produto
+ *     description: Rota para cadastrar um produto em um restaurante, com dados validados.
  *     tags: [Produtos]
  *     requestBody:
  *       required: true
@@ -34,17 +35,115 @@ const validate = (schema) => (req, res, next) => {
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nome
+ *               - preco
+ *               - restauranteId
+ *               - foto
+ *               - categoria
+ *               - promocao
  *             properties:
+ *               restauranteId:
+ *                 type: string
+ *                 format: uuid
  *               nome:
+ *                 type: string
+ *               foto:
+ *                 type: string
+ *                 format: uri
+ *               categoria:
  *                 type: string
  *               preco:
  *                 type: number
- *               restauranteId:
- *                 type: string
+ *               promocao:
+ *                 type: object
+ *                 properties:
+ *                   descricaoPromocao:
+ *                     type: string
+ *                   precoPromocional:
+ *                     type: number
+ *                   diasPromocao:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         dia:
+ *                           type: string
+ *                         inicio:
+ *                           type: string
+ *                         fim:
+ *                           type: string
+ *                   horarioInicioPromocao:
+ *                     type: string
+ *                   horarioFimPromocao:
+ *                     type: string
+ *             example:
+ *               restauranteId: "8d46185d-34a0-49f9-9e5a-98c35b282197"
+ *               nome: "Hamburguer"
+ *               foto: "https://example.com/Hamburguer.jpg"
+ *               categoria: "Lanches"
+ *               preco: 25.00
+ *               promocao:
+ *                 descricaoPromocao: "Promoção de Verão!"
+ *                 precoPromocional: 20.00
+ *                 diasPromocao:
+ *                   - dia: "Segunda-feira"
+ *                     inicio: "10:00"
+ *                     fim: "18:00"
+ *                   - dia: "Quarta-feira"
+ *                     inicio: "10:00"
+ *                     fim: "18:00"
+ *                 horarioInicioPromocao: "10:00"
+ *                 horarioFimPromocao: "18:00"
  *     responses:
  *       201:
- *         description: produto cadastrado com sucesso
+ *         description: Produto cadastrado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: ID do produto
+ *                 nome:
+ *                   type: string
+ *                 preco:
+ *                   type: number
+ *                 restauranteId:
+ *                   type: string
+ *                 foto:
+ *                   type: string
+ *                 categoria:
+ *                   type: string
+ *                 promocao:
+ *                   type: object
+ *                   properties:
+ *                     descricaoPromocao:
+ *                       type: string
+ *                     precoPromocional:
+ *                       type: number
+ *                     diasPromocao:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           dia:
+ *                             type: string
+ *                           inicio:
+ *                             type: string
+ *                           fim:
+ *                             type: string
+ *                     horarioInicioPromocao:
+ *                       type: string
+ *                     horarioFimPromocao:
+ *                       type: string
+ *       400:
+ *         description: Erro de validação ou dados inválidos
+ *       500:
+ *         description: Erro no servidor
  */
+
 router.post("/", validate(createProdutosSchema), produtos.createNew);
 
 /**
@@ -55,7 +154,7 @@ router.post("/", validate(createProdutosSchema), produtos.createNew);
  *     tags: [Produtos]
  *     responses:
  *       200:
- *         description: lista de produtos
+ *         description: Lista de produtos
  *         content:
  *           application/json:
  *             schema:
@@ -63,7 +162,6 @@ router.post("/", validate(createProdutosSchema), produtos.createNew);
  *               items:
  *                 $ref: '#/components/schemas/Produtos'
  */
-
 router.get("/", produtos.findAll);
 
 /**
@@ -82,8 +180,13 @@ router.get("/", produtos.findAll);
  *     responses:
  *       200:
  *         description: Produtos do restaurante
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Produtos'
  */
-
 router.get("/:restauranteId", produtos.findById);
 
 /**
@@ -108,13 +211,21 @@ router.get("/:restauranteId", produtos.findById);
  *             properties:
  *               nome:
  *                 type: string
+ *                 description: Nome do produto.
  *               preco:
  *                 type: number
+ *                 format: float
+ *                 description: Preço do produto.
  *     responses:
  *       200:
  *         description: Produto atualizado
+ *       400:
+ *         description: Dados inválidos ou faltando
+ *       404:
+ *         description: Produto não encontrado
+ *       500:
+ *         description: Erro no servidor
  */
-
 router.put("/:id", validate(updateProdutoSchema), produtos.update);
 
 /**
@@ -133,8 +244,11 @@ router.put("/:id", validate(updateProdutoSchema), produtos.update);
  *     responses:
  *       200:
  *         description: Produto excluído
+ *       404:
+ *         description: Produto não encontrado
+ *       500:
+ *         description: Erro no servidor
  */
-
 router.delete("/:id", validate(updateProdutoSchema), produtos.destroy);
 
 module.exports = router;

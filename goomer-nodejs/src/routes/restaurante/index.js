@@ -19,21 +19,6 @@ const validate = (schema) => (req, res, next) => {
  * @swagger
  * components:
  *   schemas:
- *     Horario:
- *       type: object
- *       properties:
- *         inicio:
- *           type: string
- *           description: Horário de início no formato HH:mm
- *           example: "09:00"
- *         fim:
- *           type: string
- *           description: Horário de fim no formato HH:mm
- *           example: "18:00"
- *       required:
- *         - inicio
- *         - fim
- *
  *     Restaurantes:
  *       type: object
  *       properties:
@@ -51,8 +36,6 @@ const validate = (schema) => (req, res, next) => {
  *           example: "Rua Exemplo, 123"
  *         horarioSemana:
  *           type: array
- *           items:
- *             $ref: '#/components/schemas/Horario'
  *           description: Horários de funcionamento durante a semana (segunda à sexta-feira)
  *           example:
  *             - inicio: "09:00"
@@ -61,8 +44,6 @@ const validate = (schema) => (req, res, next) => {
  *               fim: "12:00"
  *         horarioFimSemana:
  *           type: array
- *           items:
- *             $ref: '#/components/schemas/Horario'
  *           description: Horários de funcionamento durante o fim de semana (sábado e domingo)
  *           example:
  *             - inicio: "11:00"

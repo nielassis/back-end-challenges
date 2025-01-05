@@ -1,4 +1,4 @@
-const db = require("../../models/");
+const db = require("../models");
 
 /* const { Client } = require("pg");
 require("dotenv").config();

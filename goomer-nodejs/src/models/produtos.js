@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       promocao: {
-        type: DataTypes.JSONB, // Usando JSONB para armazenar os dados de promoção
+        type: DataTypes.JSONB,
         allowNull: true,
       },
     },

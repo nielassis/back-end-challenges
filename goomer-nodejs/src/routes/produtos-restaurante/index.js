@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const produtos = require("../../controllers/produtos.controller");
 const {
-  createProdutoSchema,
+  createProdutosSchema,
   updateProdutoSchema,
 } = require("../../schemas/produtos.schema");
 
@@ -45,7 +45,7 @@ const validate = (schema) => (req, res, next) => {
  *       201:
  *         description: produto cadastrado com sucesso
  */
-router.post("/", validate(createProdutoSchema), produtos.createNew);
+router.post("/", validate(createProdutosSchema), produtos.createNew);
 
 /**
  * @swagger

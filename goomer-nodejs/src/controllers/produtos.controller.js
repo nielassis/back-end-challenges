@@ -13,9 +13,11 @@ const findAll = async (req, res) => {
   try {
     const produtos = await db.Produtos.findAll();
 
-    // const result = await client.query("SELECT * FROM produtos");
-    // console.log(`Produtos encontrados: ${result.rows}`);
-    // res.status(200).json(result.rows);
+    /* 
+    const query = "SELECT * FROM produtos";
+    const result = await client.query(query);
+    console.log(result.rows); 
+    */
 
     res.status(200).json(produtos);
   } catch (err) {
@@ -25,7 +27,7 @@ const findAll = async (req, res) => {
 };
 
 const createNew = async (req, res) => {
-  const { restauranteId, ...produto } = req.body;
+  const { restauranteId, promocao, ...produto } = req.body;
 
   if (!restauranteId) {
     return res.status(400).json({
@@ -34,14 +36,19 @@ const createNew = async (req, res) => {
   }
 
   try {
-    /* 
-    const query = `INSERT INTO produtos (restauranteId, nome, descricao, preco, etc...)
-                  VALUES ($1, $2, $3, ...)
-                  RETURNING *`;
-    const result = await client.query(query, values);
-    */
+    const novoProduto = await db.Produtos.create({
+      ...produto,
+      restauranteId,
+      promocao: promocao || null,
+    });
 
-    const novoProduto = await db.Produtos.create(req.body);
+    /* 
+    const query = `INSERT INTO produtos (restauranteId, nome, foto, categoria, preco, descricaoPromocao, precoPromocional, diasPromocao) 
+                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
+    const values = [restauranteId, produto.nome, produto.foto, produto.categoria, produto.preco, promocao?.descricaoPromocao, promocao?.precoPromocional, promocao?.diasPromocao];
+    const result = await client.query(query, values);
+    console.log(result.rows);
+    */
 
     res.status(201).json(novoProduto);
   } catch (err) {
@@ -53,37 +60,53 @@ const createNew = async (req, res) => {
 const findById = async (req, res) => {
   try {
     const produto = await db.Produtos.findOne({
-      where: { restauranteId: req.params.restauranteId },
-      attributes: ["id", "nome"],
+      where: { id: req.params.id },
     });
 
-    // const query = `SELECT id, nome FROM produtos WHERE restauranteId = $1`;
-    // const result = await client.query(query, [req.params.restauranteId]);
-    // console.log(`Produto encontrado: ${result.rows}`);
-    // res.status(200).json(result.rows);
+    if (!produto) {
+      return res.status(404).json({
+        message: "Produto não encontrado",
+      });
+    }
+
+    /* 
+    const query = "SELECT * FROM produtos WHERE id = $1";
+    const result = await client.query(query, [req.params.id]);
+    console.log(result.rows);
+    */
 
     res.status(200).json(produto);
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: "Erro ao buscar produtos do restaurante",
+      message: "Erro ao buscar produto",
     });
   }
 };
 
 const update = async (req, res) => {
   try {
-    /* 
-    const query = `UPDATE produtos
-                  SET nome = $1, descricao = $2, preco = $3, etc...
-                  WHERE id = $4
-                  RETURNING *`;
-    const result = await client.query(query, values);
-    */
+    const produtoExistente = await db.Produtos.findOne({
+      where: { id: req.params.id },
+    });
+
+    if (!produtoExistente) {
+      return res.status(404).json({
+        message: "Produto não encontrado",
+      });
+    }
 
     const [affectedCount] = await db.Produtos.update(req.body, {
       where: { id: req.params.id },
     });
+
+    /* 
+    const query = `UPDATE produtos SET nome = $1, foto = $2, categoria = $3, preco = $4, descricaoPromocao = $5, precoPromocional = $6, diasPromocao = $7
+                   WHERE id = $8 RETURNING *`;
+    const values = [req.body.nome, req.body.foto, req.body.categoria, req.body.preco, req.body.descricaoPromocao, req.body.precoPromocional, req.body.diasPromocao, req.params.id];
+    const result = await client.query(query, values);
+    console.log(result.rows);
+    */
 
     if (affectedCount > 0) {
       const produtoAtualizado = await db.Produtos.findOne({
@@ -93,7 +116,7 @@ const update = async (req, res) => {
       return res.status(200).json(produtoAtualizado);
     } else {
       res.status(404).json({
-        message: "Produto não encontrado ou não foi atualizado",
+        message: "Produto não foi atualizado",
       });
     }
   } catch (error) {
@@ -107,21 +130,26 @@ const update = async (req, res) => {
 
 const destroy = async (req, res) => {
   try {
-    /* 
-    const query = `DELETE FROM produtos
-                  WHERE id = $1
-                  RETURNING *`;
-    const result = await client.query(query, [req.params.id]);
-    */
-
     const deletedCount = await db.Produtos.destroy({
       where: { id: req.params.id },
     });
 
-    res.status(200).json({
-      message: "Produto excluído com sucesso",
-      deletedCount,
-    });
+    /* 
+    const query = "DELETE FROM produtos WHERE id = $1 RETURNING *";
+    const result = await client.query(query, [req.params.id]);
+    console.log(result.rows);
+    */
+
+    if (deletedCount > 0) {
+      res.status(200).json({
+        message: "Produto excluído com sucesso",
+        deletedCount,
+      });
+    } else {
+      res.status(404).json({
+        message: "Produto não encontrado",
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({

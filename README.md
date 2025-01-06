@@ -8,9 +8,9 @@ Este repositório é dedicado a fornecer soluções de back-end para desafios re
 
 Aqui estão alguns exemplos de desafios enfrentados por empresas, com as tecnologias utilizadas e os links para as soluções:
 
-| **Empresa** | **TechStack**                | **Solução**                                                                                |
-| ----------- | ---------------------------- | ------------------------------------------------------------------------------------------ |
-| **Goomer**  | Node.js, Express, PostgreSQL | [Ver Solução ->](https://github.com/nielassis/back-end-challenges/tree/main/goomer-nodejs) |
+| **Empresa**                         | **TechStack**                | **Solução**                                                                                | **Desafio**                                                              |
+| ----------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| [Goomer](https://www.goomer.com.br) | Node.js, Express, PostgreSQL | [Ver Solução ->](https://github.com/nielassis/back-end-challenges/tree/main/goomer-nodejs) | [Ver Desafio ->](https://github.com/goomerdev/job-dev-backend-interview) |
 
 > A tabela acima apresenta uma visão geral das soluções implementadas para cada desafio. Cada link leva você à documentação ou ao código-fonte completo da solução.
 

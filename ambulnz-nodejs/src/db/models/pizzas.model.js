@@ -1,31 +1,38 @@
 module.exports = (sequelize, DataTypes) => {
-  const Pizzas = sequelize.define("pizzas", {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
+  const Pizza = sequelize.define(
+    "Pizza",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+      nome: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      ingredientes: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false,
+      },
+      preco: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+      },
     },
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    ingredientes: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-    },
-    preco: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-    },
-  });
+    {
+      tableName: "pizzas",
+      timestamps: true,
+    }
+  );
 
-  Pizzas.associate = (models) => {
-    Pizzas.hasMany(models.ItemPedido, {
+  Pizza.associate = (models) => {
+    Pizza.hasMany(models.ItemPedido, {
       foreignKey: "pizzaId",
-      as: "item_pedido",
+      as: "itemPedido",
     });
   };
 
-  return Pizzas;
+  return Pizza;
 };

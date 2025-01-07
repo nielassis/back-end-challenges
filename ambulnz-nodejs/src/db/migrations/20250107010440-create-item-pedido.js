@@ -33,7 +33,7 @@ module.exports = {
         allowNull: false,
       },
       preco: {
-        type: Sequelize.NUMBER,
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
     });

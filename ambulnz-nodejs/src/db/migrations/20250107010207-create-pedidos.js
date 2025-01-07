@@ -18,8 +18,8 @@ module.exports = {
         type: Sequelize.ENUM("pendente", "em preparo", "entregue", "cancelado"),
         allowNull: false,
       },
-      valorTotal: {
-        type: Sequelize.NUMBER,
+      preco: {
+        type: Sequelize.DECIMAL(10, 2),
         allowNull: false,
       },
     });

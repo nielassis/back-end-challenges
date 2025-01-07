@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 
@@ -12,6 +13,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
+const PORT = process.env.PORT;
+const HOST = process.env.HOST;
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em ${HOST}:${PORT}`);
 });

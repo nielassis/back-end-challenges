@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    preco: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
   });
 
   ItemPedido.associate = (models) => {

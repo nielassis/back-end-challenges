@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     preco: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
   });

@@ -1,7 +1,3 @@
-"use strict";
-
-require("dotenv").config();
-
 const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
@@ -11,9 +7,8 @@ const config = require(__dirname + "/../config/config.js")[env];
 const db = {};
 
 let sequelize;
-
-if (config.connectionString) {
-  sequelize = new Sequelize(config.connectionString, {
+if (config.url) {
+  sequelize = new Sequelize(config.url, {
     dialect: config.dialect,
     ssl: config.ssl,
     dialectOptions: config.dialectOptions,
@@ -36,7 +31,6 @@ fs.readdirSync(__dirname)
       sequelize,
       Sequelize.DataTypes
     );
-
     db[model.name] = model;
   });
 

@@ -1,58 +1,42 @@
 module.exports = (sequelize, DataTypes) => {
-  const ItemPedido = sequelize.define(
-    "ItemPedido",
-    {
-      // Nome do modelo em singular
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
-        primaryKey: true,
-      },
-      pedidoId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: "pedidos",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-      },
-      pizzaId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "pizzas",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-      },
-      quantidade: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      preco: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-      },
+  const itemPedido = sequelize.define("itemPedido", {
+    pedidoId: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
-    {
-      timestamps: true,
-      tableName: "itemPedido",
-    }
-  );
+    pizzaId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    quantidade: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.fn("now"),
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: sequelize.fn("now"),
+    },
+  });
 
-  ItemPedido.associate = (models) => {
-    ItemPedido.belongsTo(models.Pedido, {
+  itemPedido.associate = (models) => {
+    // Associação do ItemPedido com Pedido
+    itemPedido.belongsTo(models.Pedido, {
       foreignKey: "pedidoId",
-      as: "pedidos",
+      as: "pedido",
     });
 
-    ItemPedido.belongsTo(models.Pizza, {
+    // Associação do ItemPedido com Pizza
+    itemPedido.belongsTo(models.Pizza, {
       foreignKey: "pizzaId",
-      as: "pizzas",
+      as: "pizza",
     });
   };
 
-  return ItemPedido;
+  return itemPedido;
 };

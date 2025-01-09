@@ -4,33 +4,40 @@ module.exports = (sequelize, DataTypes) => {
     {
       id: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
         autoIncrement: true,
-        allowNull: false,
+        primaryKey: true,
       },
       nome: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       ingredientes: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       preco: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
     },
     {
       tableName: "pizzas",
-      timestamps: true,
     }
   );
 
   Pizza.associate = (models) => {
-    Pizza.hasMany(models.ItemPedido, {
+    Pizza.belongsToMany(models.Pedido, {
+      through: models.itemPedido,
       foreignKey: "pizzaId",
-      as: "itemPedido",
+      otherKey: "pedidoId",
     });
   };
 

@@ -14,7 +14,10 @@ if (config.url) {
     dialectOptions: config.dialectOptions,
   });
 } else {
-  throw new Error("A URL de conexão do banco de dados não foi fornecida.");
+  sequelize = new Sequelize(config.database, config.username, config.password, {
+    host: config.host,
+    dialect: config.dialect,
+  });
 }
 
 fs.readdirSync(__dirname)
@@ -34,6 +37,7 @@ fs.readdirSync(__dirname)
     db[model.name] = model;
   });
 
+// Chama as associações
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);

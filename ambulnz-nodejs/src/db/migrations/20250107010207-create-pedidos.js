@@ -1,6 +1,3 @@
-"use strict";
-
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("pedidos", {
@@ -18,8 +15,17 @@ module.exports = {
         type: Sequelize.ENUM("pendente", "em preparo", "entregue", "cancelado"),
         allowNull: false,
       },
-      preco: {
+      precoTotal: {
         type: Sequelize.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
         allowNull: false,
       },
     });

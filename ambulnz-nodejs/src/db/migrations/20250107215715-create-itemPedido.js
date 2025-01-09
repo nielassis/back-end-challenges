@@ -1,45 +1,45 @@
-"use strict";
-
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("itemPedido", {
       id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        allowNull: false,
-        primaryKey: true,
-      },
-      pedidoId: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: "pedidos",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-      },
-      pizzaId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "pizzas",
-          key: "id",
-        },
-        onDelete: "CASCADE",
+        autoIncrement: true,
+        primaryKey: true,
       },
       quantidade: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      preco: {
-        type: Sequelize.DECIMAL(10, 2),
+      pedidoId: {
+        type: Sequelize.UUID,
+        references: {
+          model: "pedidos",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        allowNull: false,
+      },
+      pizzaId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "pizzas",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        allowNull: false,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
         allowNull: false,
       },
     });
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable("item_pedido");
+    await queryInterface.dropTable("itemPedido");
   },
 };

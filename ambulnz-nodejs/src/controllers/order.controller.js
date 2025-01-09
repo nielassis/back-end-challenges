@@ -1,4 +1,4 @@
-const db = require("../db/models");
+const { Pedido, Pizza, itemPedido, db } = require("../db/models");
 
 const find = async (req, res) => {
   try {
@@ -25,48 +25,51 @@ const findById = async (req, res) => {
   }
 };
 
-const createNewOrder = async (req, res) => {
-  const { dataPedido, status, preco, itens } = req.body;
+async function createNewOrder(req, res) {
+  const { pizzas, status } = req.body;
+  console.log("pizzas:", pizzas);
 
-  if (!dataPedido || !status || !preco || !Array.isArray(itens)) {
-    return res.status(400).json({ error: "Dados inválidos" });
+  if (!pizzas || pizzas.length === 0) {
+    return res
+      .status(400)
+      .json({ error: "Pizzas não fornecidas ou estão vazias" });
   }
+
+  const now = new Date();
 
   try {
-    const transaction = await db.sequelize.transaction();
-    try {
-      const pedido = await db.Pedido.create(
-        {
-          dataPedido,
-          status,
-          preco,
-        },
-        { transaction }
-      );
+    // Criação do pedido
+    const pedido = await Pedido.create({
+      dataPedido: now,
+      status: status,
+      precoTotal: 0,
+      createdAt: now,
+      updatedAt: now,
+    });
 
-      const itemPedidos = itens.map((item) => ({
-        pedidoId: pedido.id,
-        pizzaId: item.pizzaId,
-        preco: item.preco,
-        quantidade: item.quantidade,
-      }));
+    const pizzasAssociadas = pizzas.map((pizza) => ({
+      pedidoId: pedido.id,
+      pizzaId: pizza.id,
+      quantidade: pizza.quantidade,
+      createdAt: now,
+      updatedAt: now,
+    }));
 
-      await db.ItemPedido.bulkCreate(itemPedidos, { transaction });
-      await transaction.commit();
-      res.status(201).json({
-        message: "Pedido criado com sucesso",
-        pedido,
-        items: itemPedidos,
-      });
-    } catch (error) {
-      await transaction.rollback();
-      res.status(500).json({ error: error.message });
-      console.error(error);
+    await itemPedido.bulkCreate(pizzasAssociadas);
+
+    let total = 0;
+    for (const pizza of pizzas) {
+      const pizzaDetails = await Pizza.findByPk(pizza.id);
+      total += pizzaDetails.preco * pizza.quantidade;
     }
+    pedido.precoTotal = total;
+    await pedido.save();
+
+    res.status(201).json(pedido);
   } catch (error) {
-    res.status(500).json({ error: error.message });
-    console.error(error);
+    console.error("Erro ao criar pedido:", error);
+    res.status(500).json({ error: "Erro ao criar pedido" });
   }
-};
+}
 
 module.exports = { find, findById, createNewOrder };
